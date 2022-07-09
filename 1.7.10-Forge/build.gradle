@@ -1,0 +1,68 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url = "https://files.minecraftforge.net/maven"
+//            url = "http://lss233.littleservice.cn/repositories/minecraft"
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+apply plugin: 'java'
+apply plugin: 'forge'
+
+group = "anticatcheat"
+version = "1.7.10-anti"
+archivesBaseName = "[AntiCatCheat"
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+compileJava.options.encoding = 'UTF-8'
+
+minecraft {
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "run"
+}
+
+dependencies {
+    implementation project(':shared')
+//    implementation group: 'javassist', name: 'javassist', version: '3.12.1.GA'
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+
+}
+
+
+configurations {
+    provided
+    compile.extendsFrom(provided)
+}
+
+jar {
+    from configurations.provided.asFileTree.files.collect { zipTree(it) }
+
+
+    manifest.attributes(
+            "FMLCorePluginContainsFMLMod": 'true',
+            "FMLCorePlugin": 'com.alphaautoleak.asm.FMLLoadingPlugin',
+    )
+}

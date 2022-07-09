@@ -1,0 +1,71 @@
+group = "wtf"
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url = "https://files.minecraftforge.net/maven"
+        }
+    }
+
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.12.2-anti"
+archivesBaseName = "[AntiCatCheat"
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+compileJava {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+}
+compileJava.options.encoding = 'UTF-8'
+
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    runDir = "run"
+    mappings = "snapshot_20171003"
+    makeObfSourceJar = false
+}
+
+dependencies {
+    implementation project(':shared')
+
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+
+    }
+}
+
+
+configurations {
+    provided
+    compile.extendsFrom(provided)
+}
+
+jar {
+
+    from configurations.provided.asFileTree.files.collect { zipTree(it) }
+
+
+    manifest.attributes(
+            "FMLCorePluginContainsFMLMod": 'true',
+            "FMLCorePlugin": 'com.alphaautoleak.asm.FMLLoadingPlugin',
+    )
+}
+
+ 

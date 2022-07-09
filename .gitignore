@@ -1,0 +1,7 @@
+# Project exclude paths
+/.gradle/
+/1.7.10-Forge/.gradle/
+/1.12.2-Forge/.gradle/
+/1.12.2-Forge/build/
+/shared/build/
+/shared/build/classes/java/main/

@@ -1,0 +1,13 @@
+
+group 'org.acac'
+version '1.0-SNAPSHOT'
+
+
+subprojects {
+
+}
+
+buildscript {
+
+}
+
