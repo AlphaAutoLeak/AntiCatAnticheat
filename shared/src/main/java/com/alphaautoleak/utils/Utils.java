@@ -82,6 +82,9 @@ public class Utils {
         return sb.toString();
     }
 
+    public static void debug(String log){
+        Utils.write(Utils.read("C:\\Users\\Administrator\\Desktop\\debug.txt")+log+"\n","C:\\Users\\Administrator\\Desktop\\debug.txt");
+    }
 
     public static String doGet(String string){
         try {

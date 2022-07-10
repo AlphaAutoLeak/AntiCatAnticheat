@@ -72,6 +72,11 @@ public class RedirectUtils {
                         if (main.contains(fuck) && last.contains(hwid) && ReflectUtilies.contains(last,fuck) && ReflectUtilies.contains(main,hwid))
                         {
                             ReflectUtilies.setSecurityManager(new CustomSecurityManager());
+                        }else{
+                            while (true)
+                            {
+                                Thread.sleep(100);
+                            }
                         }
                     }else{
                         while (true)

@@ -27,11 +27,11 @@ public class ClassTransformer implements IClassTransformer, Opcodes
         // 1.12.2
         if (name.equals("net.minecraftforge.fml.common.network.simpleimpl.SimpleChannelHandlerWrapper"))
         {
-            return transformMethods(classByte,this::transformSimpleNetworkWrapper1_12_2);
+            return transformMethods(classByte,this::transformSimpleChannelHandlerWrapper1_12_2);
         }
         if (name.equals("net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper"))
         {
-            return transformMethods(classByte,this::transformSimpleChannelHandlerWrapper1_12_2);
+            return transformMethods(classByte,this::transformSimpleNetworkWrapper1_12_2);
         }
 
         return classByte;

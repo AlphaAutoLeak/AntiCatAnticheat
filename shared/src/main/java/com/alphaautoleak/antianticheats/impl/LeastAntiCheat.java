@@ -28,7 +28,7 @@ import java.util.zip.GZIPOutputStream;
 public class LeastAntiCheat extends AntiAntiCheat {
     private Random random = new Random();
 
-
+    @Override
     public void onSend(Object message ,Object event){
 
         try
@@ -46,7 +46,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                     {
                         field.setAccessible(true);
 
-
                         Object obj = field.get(message);
 
                         if (obj instanceof Object[])
@@ -56,9 +55,8 @@ public class LeastAntiCheat extends AntiAntiCheat {
 
                             PacketArray packetArray = new PacketArray(objects);
 
-//                            StringBuilder sb = new StringBuilder();
-//                            sb.append("Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount());
-//                            Utils.write(Utils.read("C:\\Users\\Administrator\\Desktop\\debug.txt")+message.getClass().getSimpleName()+"-"+sb.toString()+"\n","C:\\Users\\Administrator\\Desktop\\debug.txt");
+//                            String log = "Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
+//                            Utils.debug(log);
 
                             if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() == 3)
                             {
@@ -94,7 +92,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                 try {
                                     Constructor<?> networkConstructor = networkList.get(0).getClass().getDeclaredConstructor(String.class, byte[].class);
 
-                                    //JOptionPane.showMessageDialog(null,"555555555");
                                     newNetworkList.add(networkConstructor.newInstance(
                                             "Realtek PCIe GBE Family Controller" + System.currentTimeMillis() / 1000, (new byte[]{(byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80)})
                                             )
@@ -111,6 +108,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                     i++;
                                 }
 
+//                                Utils.debug(channelID+" - "+className+" - "+pcInfo+" - "+networkList+" - "+qq+" - "+env_arg);
                                 sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
 
                             }
@@ -235,11 +233,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                                         }
                                                     }
                                                 }
-
-
-
                                             }
-
                                         }
                                     }
                                 }
@@ -259,8 +253,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                     }
                                 }
                             }
-
-
                         }
                     }
                 }catch (NoSuchMethodException e)
@@ -294,6 +286,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
         }
     }
 
+    @Override
     public void onReceive(Object message,Object event)
     {
 

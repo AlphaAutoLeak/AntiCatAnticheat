@@ -1,5 +1,6 @@
 package com.alphaautoleak.utils;
 
+import com.alphaautoleak.annotation.ReflectMark;
 import sun.misc.Unsafe;
 import sun.reflect.Reflection;
 import sun.security.util.SecurityConstants;
@@ -18,6 +19,51 @@ import java.security.PrivilegedAction;
 public class ReflectUtilies {
 
     private static sun.misc.Unsafe unsafe = null;
+
+    public static void invoke(Class<?> clazz , Object instance,String type,Object... objects)
+    {
+        try
+        {
+            for (Method method : clazz.getMethods())
+            {
+
+                ReflectMark annotation = method.getAnnotation(ReflectMark.class);
+
+                if (annotation != null)
+                {
+                    if (annotation.id().equals(type))
+                    {
+                        method.invoke(instance,objects);
+                    }
+                }
+            }
+        }catch (Exception e)
+        {
+        }
+    }
+
+    public static void invoke(Object instance,String type,Object obj)
+    {
+        try
+        {
+            for (Method method : instance.getClass().getMethods())
+            {
+
+                ReflectMark annotation = method.getAnnotation(ReflectMark.class);
+
+                if (annotation != null)
+                {
+                    if (annotation.id().equals(type))
+                    {
+                        method.invoke(instance,obj);
+                    }
+                }
+            }
+        }catch (Exception e)
+        {
+        }
+    }
+
 
     public static void modify(String src, String to) {
         try {

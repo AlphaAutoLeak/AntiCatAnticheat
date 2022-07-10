@@ -20,9 +20,6 @@ public class AntiAntiCheatManager {
             antiAntiCheats.add(new OldAntiCheat());
         }
         antiAntiCheats.add(new LeastAntiCheat());
-
-
-
     }
 
 

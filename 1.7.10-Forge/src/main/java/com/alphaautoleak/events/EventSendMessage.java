@@ -4,7 +4,6 @@ import com.alphaautoleak.annotation.ReflectMark;
 import com.darkmagician6.eventapi.events.Event;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelFutureListener;
 
@@ -25,12 +24,12 @@ public class EventSendMessage implements Event {
         this.channels = channels;
     }
 
-    @ReflectMark(mark = "2")
+    @ReflectMark(id = "2")
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
 
-    @ReflectMark(mark = "1")
+    @ReflectMark(id = "1")
     public void sendToServer(Object message)
     {
         channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);

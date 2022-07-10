@@ -25,7 +25,7 @@ import java.util.zip.GZIPOutputStream;
 public class OldAntiCheat extends AntiAntiCheat {
     public Random random = new Random();
 
-
+    @Override
     public void onReceive(Object message ,Object event){
 
         try {
@@ -57,6 +57,7 @@ public class OldAntiCheat extends AntiAntiCheat {
 
     }
 
+    @Override
     public void onSend(Object message ,Object event){
 
         if (message.getClass().getCanonicalName().contains("165824") ||

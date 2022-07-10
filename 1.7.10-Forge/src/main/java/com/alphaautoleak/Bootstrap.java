@@ -3,9 +3,11 @@ package com.alphaautoleak;
 import com.alphaautoleak.antianticheats.AntiAntiCheat;
 import com.alphaautoleak.events.EventReceiveMessage;
 import com.alphaautoleak.events.EventSendMessage;
+import com.alphaautoleak.utils.ReflectUtilies;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.relauncher.FMLSecurityManager;
 
 
 /**
@@ -41,5 +43,8 @@ public class Bootstrap {
         }
     }
 
+    public static SecurityManager getFMLSecurityManager(){
+        return new FMLSecurityManager();
+    }
 
 }

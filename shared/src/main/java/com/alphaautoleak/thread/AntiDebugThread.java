@@ -45,7 +45,7 @@ public class AntiDebugThread
                             ostr.contains("vmware.exe") ||
                             ostr.contains("VBoxService.exe")
                     ){
-//                        FMLCommonHandler.instance().exitJava(-1,true);
+                        System.exit(0);
                     }
                 }
 

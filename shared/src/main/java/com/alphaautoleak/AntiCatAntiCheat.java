@@ -46,8 +46,7 @@ public class AntiCatAntiCheat {
             }
         }
         contents = Utils.doGet("http://81.70.92.71/lmaocac.txt");
-        new AntiAntiCheatManager();
-//        ReflectUtilies.setSecurityManager(new FMLSecurityManager());
+        antiAntiCheatManager = new AntiAntiCheatManager();
     }
 
     public static void exitServer(){

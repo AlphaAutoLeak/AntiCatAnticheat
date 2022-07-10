@@ -2,8 +2,11 @@ package com.alphaautoleak.antianticheats;
 
 import com.alphaautoleak.AntiCatAntiCheat;
 import com.alphaautoleak.annotation.ReflectMark;
+import com.alphaautoleak.utils.ReflectUtilies;
+import com.alphaautoleak.utils.Utils;
 import com.darkmagician6.eventapi.EventManager;
 
+import javax.swing.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,39 +26,17 @@ public class AntiAntiCheat {
     }
 
     public void onSend(Object message ,Object event){
-
     }
 
-
     public void sendToServer(Object event, Object message){
-        invoke(event,message,"1");
+        ReflectUtilies.invoke(event,"1",message);
     }
 
     public void setCancelled(Object event, boolean stage){
-        invoke(event,stage,"2");
+        ReflectUtilies.invoke(event,"2",stage);
     }
 
-    private void invoke(Object event,Object obj,String type)
-    {
-        try
-        {
-            for (Method method : event.getClass().getMethods())
-            {
-                for (Annotation annotation : method.getAnnotations())
-                {
-                    if (annotation instanceof ReflectMark)
-                    {
-                        if (((ReflectMark) annotation).mark().equals(type))
-                        {
-                            method.invoke(event,obj);
-                        }
-                    }
-                }
-            }
-        }catch (Exception e)
-        {
-        }
-    }
+
 
 
 

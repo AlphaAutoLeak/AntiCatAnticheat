@@ -1,7 +1,6 @@
 package com.alphaautoleak.events;
 
 import com.alphaautoleak.annotation.ReflectMark;
-import com.darkmagician6.eventapi.events.Cancellable;
 import com.darkmagician6.eventapi.events.Event;
 
 /**
@@ -22,7 +21,7 @@ public class EventReceiveMessage implements Event {
     }
 
 
-    @ReflectMark(mark = "2")
+    @ReflectMark(id = "2")
     public void setCancelled(boolean state) {
         this.cancelled = state;
     }
