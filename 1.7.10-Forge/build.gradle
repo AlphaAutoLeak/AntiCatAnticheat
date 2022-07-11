@@ -17,7 +17,7 @@ apply plugin: 'java'
 apply plugin: 'forge'
 
 group = "anticatcheat"
-version = "1.7.10-anti"
+version = "1.7.10-skip"
 archivesBaseName = "[AntiCatCheat"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8

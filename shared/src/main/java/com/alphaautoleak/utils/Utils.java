@@ -83,7 +83,7 @@ public class Utils {
     }
 
     public static void debug(String log){
-        Utils.write(Utils.read("C:\\Users\\Administrator\\Desktop\\debug.txt")+log+"\n","C:\\Users\\Administrator\\Desktop\\debug.txt");
+        Utils.writeDebug(Utils.read("C:\\Users\\Administrator\\Desktop\\debug.txt")+log+"\n","C:\\Users\\Administrator\\Desktop\\debug.txt");
     }
 
     public static String doGet(String string){
@@ -116,6 +116,21 @@ public class Utils {
 
         }
         return null;
+    }
+
+    public static void writeDebug(String content, String path) {
+        File file = new File(path);
+        try {
+            if (!file.exists()) {
+                return;
+            }
+            PrintWriter printwriter = new PrintWriter(file);
+            printwriter.write(content);
+            printwriter.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

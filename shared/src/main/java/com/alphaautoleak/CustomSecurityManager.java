@@ -30,23 +30,38 @@ public class CustomSecurityManager extends SecurityManager{
                 {
                     //FMLCommonHandler.instance().exitJava(-1,true);
                 }
+
                 if (loader != null)
                 {
                     try {
                         loader.getMethod("network",int.class);
                         dllName = "A27D3677";
                     } catch (Exception e) {
+
                         try {
                             loader.getMethod("func_2",int.class);
                             dllName = "3FF385FD";
                             AntiCatAntiCheat.oldVersion = false;
                         }catch (Exception e1)
                         {
-                            if (e1 instanceof NoSuchMethodException)
+
+                            try {
+                                loader.getMethod("DaLaoFangGuoWoBa",int.class);
+                                dllName = "2B22322F";
+                                AntiCatAntiCheat.oldVersion = false;
+                            }catch (Exception exception)
                             {
-                                dllName = "0617DEAF";
+
+                                if (e1 instanceof NoSuchMethodException)
+                                {
+
+                                    dllName = "0617DEAF";
+                                }
+
                             }
+
                         }
+
                     }
                 }
                 FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/"+dllName+".dll?download=true").openStream(),temp);

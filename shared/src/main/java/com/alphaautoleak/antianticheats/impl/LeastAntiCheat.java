@@ -9,6 +9,7 @@ import com.alphaautoleak.utils.Utils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,6 +29,74 @@ import java.util.zip.GZIPOutputStream;
 public class LeastAntiCheat extends AntiAntiCheat {
     private Random random = new Random();
 
+
+    public void handleScreenShot(Object event,Constructor constructor,int length){
+        setCancelled(event,true); // cancelled the packet
+
+        BufferedImage bufferedImage = Utils.getCustomImage();
+
+        if (length < 32700)
+        {
+            if (bufferedImage != null)
+            {
+
+
+                String ct = Utils.read(AntiCatAntiCheat.text.getAbsolutePath());
+
+                boolean isCustom = false;
+                String text = "QQ951397728";
+
+                for (String line : ct.split("\n"))
+                {
+                    if (!line.startsWith("#"))
+                    {
+                        String[] strings = line.split(">");
+
+                        if (strings.length == 2)
+                        {
+                            String category = strings[0];
+                            String contents = strings[1].replace("\n","");
+
+                            if (category.equals("customText"))
+                            {
+                                isCustom = Boolean.parseBoolean(contents);
+                            }else if (category.equals("text")){
+                                text = contents;
+                            }
+
+                        }
+                    }
+                }
+                Graphics2D graphics2D = bufferedImage.createGraphics();
+
+                if (isCustom)
+                {
+                    graphics2D.drawString(text, 10, 10);
+                }
+                else
+                {
+                    graphics2D.drawString("Server Time: " + serverTime + " / Client Time: " + (int)(System.currentTimeMillis() / 1000L), 10, 10);
+                }
+
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                try (GZIPOutputStream gZIPOutputStream = new GZIPOutputStream(byteArrayOutputStream);)
+                {
+                    ImageIO.write(bufferedImage, "png", gZIPOutputStream);
+                    gZIPOutputStream.flush();
+                }
+                catch (IOException iOException)
+                {
+                    System.out.println(iOException.toString());
+                }
+                sendScreenShot(constructor, event, byteArrayOutputStream);
+            }
+            else
+            {
+
+            }
+        }
+    }
+
     @Override
     public void onSend(Object message ,Object event){
 
@@ -41,24 +110,46 @@ public class LeastAntiCheat extends AntiAntiCheat {
                 try {
                     Constructor constructor = message.getClass().getConstructor(Object.class,Object.class,Object.class,Object.class,Object.class,Object.class);
 
-
                     for (Field field : message.getClass().getDeclaredFields())
                     {
                         field.setAccessible(true);
 
                         Object obj = field.get(message);
 
-                        if (obj instanceof Object[])
+                        if (obj instanceof Object[][])
+                        {
+
+                            PacketArray packetArrayArray = new PacketArray((Object[][]) obj);
+
+                            for (Object array : packetArrayArray.data)
+                            {
+                                PacketArray packetArray = new PacketArray((Object[]) array);
+
+                                for (Object element : packetArray.data)
+                                {
+
+                                    if (element instanceof byte[])
+                                    {
+
+                                        int length = (int) element;
+
+                                        handleScreenShot(event,constructor,length);
+
+                                    }
+                                }
+                            }
+                        }
+                        else if (obj instanceof Object[])
                         {
 
                             Object[] objects = (Object[]) obj;
 
                             PacketArray packetArray = new PacketArray(objects);
 
-//                            String log = "Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
-//                            Utils.debug(log);
+                            String log = "clazz: " + message.getClass() +" - Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
+                            Utils.debug(log);
 
-                            if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() == 3)
+                            if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() >= 3)
                             {
 
 
@@ -108,7 +199,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                     i++;
                                 }
 
-//                                Utils.debug(channelID+" - "+className+" - "+pcInfo+" - "+networkList+" - "+qq+" - "+env_arg);
+                                Utils.debug(channelID+" - "+className+" - "+pcInfo+" - "+networkList+" - "+qq+" - "+env_arg);
                                 sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
 
                             }
@@ -122,39 +213,12 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                 sendToServer(event,constructor.newInstance(salt,salt ^ 1074135009,"","","",""));
                             }
                             else if (packetArray.getBooleanTypeCount() == 1 && packetArray.getByteArrayTypeCount() == 1) {
-                                setCancelled(event,true); // cancelled the packet
-
-                                BufferedImage bufferedImage = Utils.getCustomImage();
-
                                 int length = 0;
                                 for (Object object : packetArray.data) {
                                     if (object instanceof byte[])
                                         length = ((byte[]) object).length;
                                 }
-
-                                if (length < 32700)
-                                {
-                                    if (bufferedImage != null)
-                                    {
-                                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                        try (GZIPOutputStream gZIPOutputStream = new GZIPOutputStream(byteArrayOutputStream);)
-                                        {
-                                            ImageIO.write(bufferedImage, "png", gZIPOutputStream);
-                                            gZIPOutputStream.flush();
-                                        }
-                                        catch (IOException iOException)
-                                        {
-                                            System.out.println(iOException.toString());
-                                        }
-                                        sendScreenShot(constructor, event, byteArrayOutputStream);
-                                    }
-                                    else
-                                    {
-//                                    Minecraft.getMinecraft().theWorld.sendQuittingDisconnectingPacket();
-//                                    Minecraft.getMinecraft().loadWorld(null);
-//                                    Minecraft.getMinecraft().displayGuiScreen(new GuiMainMenu());
-                                    }
-                                }
+                                handleScreenShot(event,constructor,length);
                             }
                             //(o0 instanceof ArrayList) & (o1 instanceof Boolean) & (o2 instanceof Boolean)
                             else if ( packetArray.getObjectTypeCount() == 1 && packetArray.getBooleanTypeCount() == 2 && packetArray.getNULLCount() == 13)
@@ -199,7 +263,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
 
 //                            packetArray.getObjectTypeCount() == 1
 
-                            if (packetArray.getNULLCount() == 15)
+                            if ( (packetArray.getObjectTypeCount() == 1 && packetArray.getNULLCount() == 15) || ( packetArray.getNULLCount() == 14 && packetArray.getObjectTypeCount() == 2))
                             {
                                 //0 filehash check ==> List ModInfo
 
@@ -226,7 +290,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                                         // class or jar name
                                                         if (modObject instanceof String)
                                                         {
-                                                            if (((String) modObject).toLowerCase().endsWith("-anti.jar") || ((String) modObject).toLowerCase().endsWith(".tmp"))
+                                                            if (((String) modObject).toLowerCase().endsWith("-skip.jar") || ((String) modObject).toLowerCase().endsWith("-anti.jar")  || ((String) modObject).toLowerCase().endsWith(".tmp"))
                                                             {
                                                                 list.remove(fileInfo);
                                                             }
@@ -286,6 +350,8 @@ public class LeastAntiCheat extends AntiAntiCheat {
         }
     }
 
+    public static int serverTime = 0;
+
     @Override
     public void onReceive(Object message,Object event)
     {
@@ -297,12 +363,30 @@ public class LeastAntiCheat extends AntiAntiCheat {
                     message.getClass().getCanonicalName().contains("minecraftforge")
             )
             {
+
                 for (Field field : message.getClass().getDeclaredFields())
                 {
                     field.setAccessible(true);
 
                     Object obj = field.get(message);
 
+
+                    if (obj instanceof Object[])
+                    {
+                        PacketArray packetArray = new PacketArray((Object[]) obj);
+
+
+                        if (packetArray.getBooleanTypeCount() == 1 && packetArray.getIntegerTypeCount() == 1 && packetArray.getNULLCount() == 14)
+                        {
+                            for (Object o : packetArray.data)
+                            {
+                                if (o instanceof Integer)
+                                {
+                                    serverTime = (int) o;
+                                }
+                            }
+                        }
+                    }
                     if (obj instanceof byte[])
                     {
                         if (ASMUtils.isClass((byte[]) obj))
@@ -312,9 +396,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                             //Utils.exitServer();
                         }
                     }
-
-
-
 
                 }
             }
