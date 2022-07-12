@@ -83,7 +83,8 @@ public class Utils {
     }
 
     public static void debug(String log){
-        Utils.writeDebug(Utils.read("C:\\Users\\Administrator\\Desktop\\debug.txt")+log+"\n","C:\\Users\\Administrator\\Desktop\\debug.txt");
+        String path = "C:\\Users\\Administrator\\Desktop\\debug.txt";
+        Utils.writeDebug(Utils.read(path)+log+"\n",path);
     }
 
     public static String doGet(String string){

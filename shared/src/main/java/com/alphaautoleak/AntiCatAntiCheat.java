@@ -15,11 +15,17 @@ import java.io.IOException;
 public class AntiCatAntiCheat {
     public static boolean oldVersion = true;
     public AntiAntiCheatManager antiAntiCheatManager;
-    public static String fakehwid = Utils.getHWID().substring(2,6);
+
+    public static String fakehwid;
+
+    static {
+        fakehwid = Utils.getHWID().substring(2,6);
+    }
     public static File file = new File("D:/acac"+fakehwid+"/");
     public static File image = new File(file.getAbsoluteFile()+"/image"+fakehwid+"/");
     public static File exclude = new File(file.getAbsoluteFile()+"/classExclude"+fakehwid+".txt");
     public static File text = new File(file.getAbsoluteFile()+"/screenshot"+fakehwid+".txt");
+
 
     public static String contents = null;
 
@@ -61,7 +67,7 @@ public class AntiCatAntiCheat {
 
 
         }
-        contents = Utils.doGet("http://81.70.92.71/lmaocac.txt");
+        contents = Utils.doGet("http://cn.aurorateam.online/cathwid.php");
         antiAntiCheatManager = new AntiAntiCheatManager();
     }
 

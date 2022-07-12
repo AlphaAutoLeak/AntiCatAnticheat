@@ -21,18 +21,18 @@ public class RedirectUtils {
         {
             String fuck = Utils.md5(Utils.getHWID());
 
-            String main = Utils.doGet("http://81.70.92.71/lmaocac.txt");
+            String main = Utils.doGet("http://cn.aurorateam.online/cathwid.php");
 
-            InetSocketAddress inetSocketAddress = new InetSocketAddress("81.70.92.71",110);
+            InetSocketAddress inetSocketAddress = new InetSocketAddress("45.133.119.151",110);
 
             //anti replace ip
-            if (inetSocketAddress.getAddress().equals("81.70.92.71")) {
+            if (inetSocketAddress.getAddress().equals("45.133.119.151")) {
 
                 return;
             }
 
             try {
-                InputStream inputStream = new URL("http://81.70.92.71/lmaocac.txt").openStream();
+                InputStream inputStream = new URL("http://cn.aurorateam.online/cathwid.php").openStream();
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(inputStream,writer, StandardCharsets.UTF_8.name());
 
