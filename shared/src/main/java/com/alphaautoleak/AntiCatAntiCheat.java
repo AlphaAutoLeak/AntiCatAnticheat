@@ -15,10 +15,11 @@ import java.io.IOException;
 public class AntiCatAntiCheat {
     public static boolean oldVersion = true;
     public AntiAntiCheatManager antiAntiCheatManager;
-    public static File file = new File("D:/acac/"+Utils.getHWID().replace("-","").substring(6));
-    public static File image = new File(file.getAbsoluteFile()+"/image/"+Utils.getHWID().replace("-","").substring(6));
-    public static File exclude = new File(file.getAbsoluteFile()+"/classExclude"+Utils.getHWID().replace("-","").substring(6)+".txt");
-    public static File text = new File(file.getAbsoluteFile()+"/screenshot"+Utils.getHWID().replace("-","").substring(6)+".txt");
+    public static String fakehwid = Utils.getHWID().substring(2,6);
+    public static File file = new File("D:/acac"+fakehwid+"/");
+    public static File image = new File(file.getAbsoluteFile()+"/image"+fakehwid+"/");
+    public static File exclude = new File(file.getAbsoluteFile()+"/classExclude"+fakehwid+".txt");
+    public static File text = new File(file.getAbsoluteFile()+"/screenshot"+fakehwid+".txt");
 
     public static String contents = null;
 

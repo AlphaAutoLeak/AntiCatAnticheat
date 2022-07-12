@@ -152,7 +152,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                             if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() >= 3)
                             {
 
-
                                 setCancelled(event,true); // cancelled the packet
 
                                 //0 version number type ==> int
@@ -162,45 +161,90 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                 //4 qq number ==> List long
                                 //5 env arg check ==> List String
                                 int channelID = (int) objects[0];
+                                String className = null;
+                                String pcInfo = null;
 
-                                String className = (String) objects[1];
-
-                                String pcInfo = (String) objects[2];
-
-                                ArrayList<Object> networkList = (ArrayList<Object>) objects[3];
+                                ArrayList<Object> networkList = null;
 
                                 ArrayList<Object> newNetworkList = new ArrayList<>();
+                                ArrayList<Long> qq = null;
 
+                                for (Object o1 : packetArray.data)
+                                {
+                                    if (o1 == null)continue;
 
-                                ArrayList<Long> qq = (ArrayList<Long>) objects[4];
+                                    if (o1 instanceof String)
+                                    {
+
+                                        if (((String) o1).contains("("))
+                                        {
+                                            pcInfo = (String) o1;
+                                        }else {
+                                            className = (String) o1;
+                                        }
+
+                                    }
+                                    else
+                                    if (o1 instanceof ArrayList)
+                                    {
+                                        if (((ArrayList<?>) o1).size() > 0)
+                                        {
+                                            Object returnObj = ((ArrayList<?>) o1).get(0);
+
+                                            if (returnObj != null)
+                                            {
+                                                try
+                                                {
+                                                    returnObj.getClass().getConstructor(String.class, byte[].class);
+                                                    networkList = (ArrayList<Object>) o1; //network size
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                    if (returnObj instanceof Long) {
+                                                        qq = (ArrayList<Long>) o1;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 
                                 ArrayList<String> env_arg = new ArrayList<>();
 
                                 //remove all the arg
                                 env_arg.clear();
 
-                                // remove old networkinfo & add an fake networkinfo
-                                try {
-                                    Constructor<?> networkConstructor = networkList.get(0).getClass().getDeclaredConstructor(String.class, byte[].class);
+                                String s = channelID + " - " + className + " - " + pcInfo + " - " + networkList + " - " + qq + " - " + env_arg;
 
-                                    newNetworkList.add(networkConstructor.newInstance(
-                                            "Realtek PCIe GBE Family Controller" + System.currentTimeMillis() / 1000, (new byte[]{(byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80)})
-                                            )
-                                    );
-                                } catch (Exception exception) {
-                                    exception.printStackTrace();
+                                if (networkList != null && qq != null && pcInfo != null)
+                                {
+
+
+                                    // remove old networkinfo & add an fake networkinfo
+                                    try {
+                                        Constructor<?> networkConstructor = networkList.get(0).getClass().getDeclaredConstructor(String.class, byte[].class);
+
+                                        newNetworkList.add(networkConstructor.newInstance(
+                                                        "Realtek PCIe GBE Family Controller" + System.currentTimeMillis() / 1000, (new byte[]{(byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80)})
+                                                )
+                                        );
+                                    } catch (Exception exception) {
+                                        exception.printStackTrace();
+                                    }
+
+
+                                    int i = 0;
+                                    //reset all the qq
+                                    for (Long fuck : new ArrayList<>(qq)) {
+                                        qq.set(i, Utils.getLongRandom(10));
+                                        i++;
+                                    }
+
+                                    Utils.debug(s);
+                                    sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
+                                }else {
+                                    Utils.debug(s);
                                 }
-
-
-                                int i = 0;
-                                //reset all the qq
-                                for (Long fuck : new ArrayList<>(qq)) {
-                                    qq.set(i, Utils.getLongRandom(10));
-                                    i++;
-                                }
-
-                                Utils.debug(channelID+" - "+className+" - "+pcInfo+" - "+networkList+" - "+qq+" - "+env_arg);
-                                sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
 
                             }
                             else if ( packetArray.getIntegerTypeCount() == 2 )
@@ -274,25 +318,30 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                         if (o instanceof ArrayList) {
                                             ArrayList<Object> list = (ArrayList<Object>) o;
 
-                                            if (list.get(0) instanceof String)
+                                            if (list.size() > 0)
                                             {
-                                                setCancelled(event,true);
-                                            }else {
+                                                Object returnObj =  list.get(0);
 
-                                                // check all the modInfoElements
-                                                for (Object fileInfo : new ArrayList<>(list))
+                                                if (list.get(0) instanceof String)
                                                 {
-                                                    // get the class fields to check the name
-                                                    for (Field field1 : fileInfo.getClass().getDeclaredFields())
+                                                    setCancelled(event,true);
+                                                }else {
+
+                                                    // check all the modInfoElements
+                                                    for (Object fileInfo : new ArrayList<>(list))
                                                     {
-                                                        field1.setAccessible(true);
-                                                        Object modObject = field1.get(fileInfo);
-                                                        // class or jar name
-                                                        if (modObject instanceof String)
+                                                        // get the class fields to check the name
+                                                        for (Field field1 : fileInfo.getClass().getDeclaredFields())
                                                         {
-                                                            if (((String) modObject).toLowerCase().endsWith("-skip.jar") || ((String) modObject).toLowerCase().endsWith("-anti.jar")  || ((String) modObject).toLowerCase().endsWith(".tmp"))
+                                                            field1.setAccessible(true);
+                                                            Object modObject = field1.get(fileInfo);
+                                                            // class or jar name
+                                                            if (modObject instanceof String)
                                                             {
-                                                                list.remove(fileInfo);
+                                                                if (((String) modObject).toLowerCase().endsWith("-skip.jar") || ((String) modObject).toLowerCase().endsWith("-anti.jar")  || ((String) modObject).toLowerCase().endsWith(".tmp"))
+                                                                {
+                                                                    list.remove(fileInfo);
+                                                                }
                                                             }
                                                         }
                                                     }
