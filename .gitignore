@@ -1,4 +1,4 @@
-# Project exclude paths
+# Project exclude path
 /.gradle/
 /1.7.10-Forge/.gradle/
 /1.12.2-Forge/.gradle/
