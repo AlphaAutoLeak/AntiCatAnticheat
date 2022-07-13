@@ -18,7 +18,7 @@ apply plugin: 'forge'
 
 group = "anticatcheat"
 version = "1.7.10-skip"
-archivesBaseName = "[AntiCatCheat"
+archivesBaseName = "!!AntiCatCheat"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 compileJava {

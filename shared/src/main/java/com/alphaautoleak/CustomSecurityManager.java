@@ -19,52 +19,11 @@ public class CustomSecurityManager extends SecurityManager{
     public void checkLink(String lib) {
         if (lib.contains("catanticheatx"))
         {
+            NativeRegister.registerNativeInvoke();
             try {
                 File temp = File.createTempFile("bifjksdbhvkl",".tmp");
                 temp.deleteOnExit();
-                String dllName = "A27D3677";
-                Class<?> loader = null;
-                try {
-                    loader = Class.forName("moe.catserver.mc.cac.NativeLoader");
-                }catch (Exception e)
-                {
-                    //FMLCommonHandler.instance().exitJava(-1,true);
-                }
-
-                if (loader != null)
-                {
-                    try {
-                        loader.getMethod("network",int.class);
-                        dllName = "A27D3677";
-                    } catch (Exception e) {
-
-                        try {
-                            loader.getMethod("func_2",int.class);
-                            dllName = "3FF385FD";
-                            AntiCatAntiCheat.oldVersion = false;
-                        }catch (Exception e1)
-                        {
-
-                            try {
-                                loader.getMethod("DaLaoFangGuoWoBa",int.class);
-                                dllName = "2B22322F";
-                                AntiCatAntiCheat.oldVersion = false;
-                            }catch (Exception exception)
-                            {
-
-                                if (e1 instanceof NoSuchMethodException)
-                                {
-
-                                    dllName = "0617DEAF";
-                                }
-
-                            }
-
-                        }
-
-                    }
-                }
-                FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/"+dllName+".dll?download=true").openStream(),temp);
+                FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/dll/30103162.dll?download=true").openStream(),temp);
                 ReflectUtilies.modify(lib,temp.getAbsolutePath());
             }catch (Exception e)
             {
