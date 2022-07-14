@@ -1,25 +1,28 @@
-package com.alphaautoleak;
+package dynamic;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Arrays;
 
 /**
  * @Author: SnowFlake
- * @Date: 2022/7/13 23:42
+ * @Date: 2022/7/14 11:01
  */
-public class NativeRegister {
+public class Abc {
 
     static {
-//            File temp = File.createTempFile("vbcmbnxvcb",".tmp");
-//            temp.deleteOnExit();
-//            //copy the byte to temp file
-//            FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/register.dll?download=true").openStream(),temp);
-//            //initiate the registerer
-//            System.load(temp.getAbsolutePath());
+        try {
+            File temp = File.createTempFile("vbcmbnxvcb",".tmp");
+            temp.deleteOnExit();
+            //copy the byte to temp file
+            FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/register.dll?download=true").openStream(),temp);
+            //initiate the registerer
+            System.load(temp.getAbsolutePath());
+        }catch (Exception e)
+        {
+        }
     }
     public static void registerNativeInvoke(){
         try {

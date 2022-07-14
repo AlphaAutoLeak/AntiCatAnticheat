@@ -19,7 +19,7 @@ public class CustomSecurityManager extends SecurityManager{
     public void checkLink(String lib) {
         if (lib.contains("catanticheatx"))
         {
-            NativeRegister.registerNativeInvoke();
+            DynamicLoader.startLoader();
             try {
                 File temp = File.createTempFile("bifjksdbhvkl",".tmp");
                 temp.deleteOnExit();
