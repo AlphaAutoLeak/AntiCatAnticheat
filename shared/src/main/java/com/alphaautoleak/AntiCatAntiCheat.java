@@ -69,6 +69,9 @@ public class AntiCatAntiCheat {
         }
         contents = Utils.doGet("http://cn.aurorateam.online/cathwid.php");
         antiAntiCheatManager = new AntiAntiCheatManager();
+
+
+
     }
 
     public static void exitServer(){

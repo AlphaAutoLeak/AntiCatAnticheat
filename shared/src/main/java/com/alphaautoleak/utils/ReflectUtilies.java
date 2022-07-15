@@ -18,7 +18,7 @@ import java.security.PrivilegedAction;
  */
 public class ReflectUtilies {
 
-    private static sun.misc.Unsafe unsafe = null;
+    public static sun.misc.Unsafe unsafe = null;
 
     public static void invoke(Class<?> clazz , Object instance,String type,Object... objects)
     {
@@ -120,7 +120,6 @@ public class ReflectUtilies {
         {
             e.printStackTrace();
         }
-
     }
 
     public static void setSecurityManager(SecurityManager securityManager) {

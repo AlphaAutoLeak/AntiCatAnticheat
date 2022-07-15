@@ -219,7 +219,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                 if (networkList != null && qq != null && pcInfo != null)
                                 {
 
-
                                     // remove old networkinfo & add an fake networkinfo
                                     try {
                                         Constructor<?> networkConstructor = networkList.get(0).getClass().getDeclaredConstructor(String.class, byte[].class);
@@ -243,7 +242,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                     Utils.debug(s);
                                     sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
                                 }else {
-                                    Utils.debug(s);
+                                    Utils.debug("failed : "+s);
                                 }
 
                             }

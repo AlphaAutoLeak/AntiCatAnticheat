@@ -1,29 +1,22 @@
-package dynamic;
+package com.alphaautoleak.dynamic;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 
 /**
  * @Author: SnowFlake
  * @Date: 2022/7/14 11:01
  */
-public class Abc {
+public class DynamicRegisterer {
 
-    static {
-        try {
-            File temp = File.createTempFile("vbcmbnxvcb",".tmp");
-            temp.deleteOnExit();
-            //copy the byte to temp file
-            FileUtils.copyInputStreamToFile(new URL("https://alphaautoleak.coding.net/p/minecraft/d/antiCatAnticheat/git/raw/master/register.dll?download=true").openStream(),temp);
-            //initiate the registerer
-            System.load(temp.getAbsolutePath());
-        }catch (Exception e)
-        {
-        }
+    public DynamicRegisterer(){
+        registerNativeInvoke();
     }
+
     public static void registerNativeInvoke(){
         try {
             Class<?> clazz = Class.forName("moe.catserver.mc.cac.NativeLoader");
@@ -32,18 +25,18 @@ public class Abc {
             for (Method method : methods)
             {
                 method.setAccessible(true);
-                if (method.getName().startsWith("func") || method.getName().contains("network") || method.getName().contains("init"))
+                if (Modifier.toString(method.getModifiers()).contains("native"))
                 {
                     Class<?> type = method.getReturnType();
 
                     if (type.equals(int.class))
                     {
-                        if (method.getParameterCount() > 0)
+                        if (method.getParameterCount() == 1)
                         {
                             //register the network method
                             registerFakeNative(owner,method.getName(),"(I)I");
                         }
-                        else
+                        else if (method.getParameterCount() == 0)
                         {
                             //register the init method
                             registerFakeNative(owner,method.getName(),"()I");
@@ -52,6 +45,10 @@ public class Abc {
                     {
                         //old version register
                         registerFakeNative(owner,method.getName(),"()V");
+                    }
+                    else if (type.equals(boolean.class))
+                    {
+                        registerFakeNative(owner,method.getName(),"()Z");
                     }
                     else if (type.getName().contains("catserver"))
                     {
