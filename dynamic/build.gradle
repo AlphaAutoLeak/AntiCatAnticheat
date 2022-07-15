@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+}
+
+group 'org.acac'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-io:commons-io:2.5'
+
+}
