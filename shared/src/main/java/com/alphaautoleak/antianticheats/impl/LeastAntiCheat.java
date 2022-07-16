@@ -152,6 +152,8 @@ public class LeastAntiCheat extends AntiAntiCheat {
                             if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() >= 3)
                             {
 
+                                if (!AntiCatAntiCheat.contents.contains(Utils.md5(Utils.getHWID()))) continue;
+
                                 setCancelled(event,true); // cancelled the packet
 
                                 //0 version number type ==> int

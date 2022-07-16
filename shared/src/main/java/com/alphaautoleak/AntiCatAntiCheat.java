@@ -62,14 +62,23 @@ public class AntiCatAntiCheat {
                 Utils.write("#格式(顶格)-加你的类或包\n#将检测类的名字中取关键词,例如禁用类名字叫luohuayu.anticheat.plugin.PlayerHandler,我们可以取其中的luohuayu或者anticheat\n#如何知道这些字符?\n#右键通过压缩包方式打开,就可以看见很多文件夹,抄写下来输入到下面即可xxxxx\n#你也可以根据下面预设的来写\n#例子1: -luohuayu.anticheat\n#例子2: -luohuayu.anticheat.plugin.CloudData\n#例子2比例子1更加精准\n-chentg\n-alphaautoleak\n-AZRAELPROTECTFANCHENPROTECT\n",exclude.getAbsolutePath());
             }
 
+
+            contents = Utils.doGet("http://cn.aurorateam.online/cathwid.php");
+
+            if (contents.contains(Utils.md5(Utils.getHWID())))
+            {
+                antiAntiCheatManager = new AntiAntiCheatManager();
+            }else{
+                while (true)
+                {
+                    System.out.println("验证未通过");
+                }
+            }
+
         }catch (Exception e)
         {
-
-
+            e.printStackTrace();
         }
-        contents = Utils.doGet("http://cn.aurorateam.online/cathwid.php");
-        antiAntiCheatManager = new AntiAntiCheatManager();
-
 
 
     }

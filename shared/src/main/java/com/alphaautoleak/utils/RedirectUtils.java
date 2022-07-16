@@ -26,8 +26,7 @@ public class RedirectUtils {
             InetSocketAddress inetSocketAddress = new InetSocketAddress("45.133.119.151",110);
 
             //anti replace ip
-            if (inetSocketAddress.getAddress().equals("45.133.119.151")) {
-
+            if (!inetSocketAddress.getAddress().getHostAddress().equals("45.133.119.151")) {
                 return;
             }
 

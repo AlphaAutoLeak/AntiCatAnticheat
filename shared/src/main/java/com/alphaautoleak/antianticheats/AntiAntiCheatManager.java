@@ -17,10 +17,14 @@ public class AntiAntiCheatManager {
     public AntiAntiCheatManager()
     {
         if (AntiCatAntiCheat.oldVersion){
-            antiAntiCheats.add(new OldAntiCheat());
+            add(new OldAntiCheat());
         }
-        antiAntiCheats.add(new LeastAntiCheat());
+        add(new LeastAntiCheat());
     }
 
+
+    public void add(AntiAntiCheat antiAntiCheat){
+        antiAntiCheats.add(antiAntiCheat);
+    }
 
 }

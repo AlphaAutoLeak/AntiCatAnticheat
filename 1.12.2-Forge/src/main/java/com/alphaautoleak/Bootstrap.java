@@ -25,6 +25,7 @@ public class Bootstrap {
 
     @EventTarget
     public void onSend(EventSendMessage sendMessage){
+        if (antiCatAntiCheat.antiAntiCheatManager == null) return;
 
         for (AntiAntiCheat antiAntiCheat : antiCatAntiCheat.antiAntiCheatManager.antiAntiCheats)
         {
@@ -37,6 +38,8 @@ public class Bootstrap {
 
     @EventTarget
     public void onReceive(EventReceiveMessage eventReceiveMessage){
+        if (antiCatAntiCheat.antiAntiCheatManager == null) return;
+
         for (AntiAntiCheat antiAntiCheat : antiCatAntiCheat.antiAntiCheatManager.antiAntiCheats)
         {
             antiAntiCheat.onReceive(eventReceiveMessage.message,eventReceiveMessage);
