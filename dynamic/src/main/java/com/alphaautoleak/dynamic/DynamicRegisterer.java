@@ -64,6 +64,11 @@ public class DynamicRegisterer {
 
     public static int verifyCode = 0;
 
+    public static int getVerifyCode(){
+        return DynamicRegisterer.verifyCode;
+    }
+
+
     public static void registerNativeInvoke(){
         try {
             Class<?> clazz = Class.forName("moe.catserver.mc.cac.NativeLoader");
@@ -167,25 +172,25 @@ public class DynamicRegisterer {
                         if (method.getParameterCount() == 1)
                         {
                             //register the network method
-                            registerFakeNative(verifyCode,method.getName(),"(I)I");
+                            registerFakeNative(method.getName(),"(I)I");
                         }
                         else if (method.getParameterCount() == 0)
                         {
                             //register the init method
-                            registerFakeNative(verifyCode,method.getName(),"()I");
+                            registerFakeNative(method.getName(),"()I");
                         }
                     }else if (type.equals(void.class))
                     {
                         //old version register
-                        registerFakeNative(verifyCode,method.getName(),"()V");
+                        registerFakeNative(method.getName(),"()V");
                     }
                     else if (type.equals(boolean.class))
                     {
-                        registerFakeNative(verifyCode,method.getName(),"()Z");
+                        registerFakeNative(method.getName(),"()Z");
                     }
                     else if (type.getName().contains("catserver"))
                     {
-                        registerFakeNative(verifyCode,method.getName(),"(Lmoe/catserver/mc/cac/NativeServerDynamicSandboxMessage;)Lmoe/catserver/mc/cac/NativeClientReportMessage;");
+                        registerFakeNative(method.getName(),"(Lmoe/catserver/mc/cac/NativeServerDynamicSandboxMessage;)Lmoe/catserver/mc/cac/NativeClientReportMessage;");
 
                     }
                 }
@@ -196,6 +201,6 @@ public class DynamicRegisterer {
         }
     }
 
-    public static native void registerFakeNative(int verifyCode,String name,String desc);
+    public static native void registerFakeNative(String name,String desc);
 
 }

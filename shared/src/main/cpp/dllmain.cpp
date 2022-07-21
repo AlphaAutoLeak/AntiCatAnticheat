@@ -2,6 +2,7 @@
 #include "jni.h"
 #include <malloc.h>
 
+
 char* jstringToChar(JNIEnv* env, jstring jstr) {
 
 	char* rtn = NULL;
@@ -49,8 +50,13 @@ extern "C" JNIEXPORT jboolean JNICALL init2
 extern "C" JNIEXPORT jint JNICALL codeVerify
 (JNIEnv * env, jclass)
 {
-	return 303321329;
+	jclass reg = env->FindClass("com/alphaautoleak/dynamic/DynamicRegisterer");
+
+	jmethodID id = env->GetStaticMethodID(reg,"getVerifyCode","()I");
+
+	return env->CallStaticIntMethod(reg, id);
 }
+
 
 extern "C" JNIEXPORT jint JNICALL network
 (JNIEnv * env, jclass, jint wtf)
@@ -77,21 +83,21 @@ extern "C" void regSingleNative(JNIEnv* env ,jclass clazz , char* name , char* d
 }
 
 extern "C" JNIEXPORT void JNICALL regNative
-(JNIEnv * env, jclass ,jstring ownwer ,jstring name , jstring desc)
+(JNIEnv * env, jclass ,jstring name , jstring desc)
 {
+
 	jclass nativeloader = env->FindClass("moe/catserver/mc/cac/NativeLoader");
 
-	char* o = jstringToChar(env,ownwer);
 	char* n = jstringToChar(env, name);
 	char* d = jstringToChar(env, desc);
 
 	if (strcmp(d, "()Z") == 0)
 	{
-		regSingleNative(env, nativeloader, n, d, (void*)init1);
+		regSingleNative(env, nativeloader, n, d, (void*)init2);
 	}
 	if (strcmp(d,"()V") == 0)
 	{
-		regSingleNative(env, nativeloader, n, d, (void*)init2);
+		regSingleNative(env, nativeloader, n, d, (void*)init1);
 	}
 	if (strcmp(d, "()I") == 0)
 	{
@@ -124,7 +130,7 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 	JNINativeMethod jnm[1];
 
 	jnm[0].name = (CHAR*)"registerFakeNative";
-	jnm[0].signature = (CHAR*)"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+	jnm[0].signature = (CHAR*)"(Ljava/lang/String;Ljava/lang/String;)V";
 	jnm[0].fnPtr = (void*)regNative;
 
 	env->RegisterNatives(reg, jnm, sizeof(jnm) / sizeof(jnm[0]));
