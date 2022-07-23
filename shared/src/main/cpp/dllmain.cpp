@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿#include "windows.h"
 #include "jni.h"
 #include <malloc.h>
 
