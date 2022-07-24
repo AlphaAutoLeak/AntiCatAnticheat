@@ -4,6 +4,7 @@ import com.alphaautoleak.AntiCatAntiCheat;
 import com.alphaautoleak.antianticheats.AntiAntiCheat;
 import com.alphaautoleak.antianticheats.PacketArray;
 
+import com.alphaautoleak.config.ConfigManager;
 import com.alphaautoleak.utils.ASMUtils;
 import com.alphaautoleak.utils.Utils;
 
@@ -40,38 +41,13 @@ public class LeastAntiCheat extends AntiAntiCheat {
             if (bufferedImage != null)
             {
 
+                AntiCatAntiCheat.instance.configManager.updateData();
 
-                String ct = Utils.read(AntiCatAntiCheat.text.getAbsolutePath());
-
-                boolean isCustom = false;
-                String text = "QQ951397728";
-
-                for (String line : ct.split("\n"))
-                {
-                    if (!line.startsWith("#"))
-                    {
-                        String[] strings = line.split(">");
-
-                        if (strings.length == 2)
-                        {
-                            String category = strings[0];
-                            String contents = strings[1].replace("\n","");
-
-                            if (category.equals("customText"))
-                            {
-                                isCustom = Boolean.parseBoolean(contents);
-                            }else if (category.equals("text")){
-                                text = contents;
-                            }
-
-                        }
-                    }
-                }
                 Graphics2D graphics2D = bufferedImage.createGraphics();
 
-                if (isCustom)
+                if (ConfigManager.config.enableCustomScreenShotText)
                 {
-                    graphics2D.drawString(text, 10, 10);
+                    graphics2D.drawString(ConfigManager.config.screenShotText, 10, 10);
                 }
                 else
                 {
@@ -108,7 +84,7 @@ public class LeastAntiCheat extends AntiAntiCheat {
             )
             {
                 try {
-                    Constructor constructor = message.getClass().getConstructor(Object.class,Object.class,Object.class,Object.class,Object.class,Object.class);
+                    Constructor<?> constructor = message.getClass().getConstructor(Object.class,Object.class,Object.class,Object.class,Object.class,Object.class);
 
                     for (Field field : message.getClass().getDeclaredFields())
                     {
@@ -119,25 +95,33 @@ public class LeastAntiCheat extends AntiAntiCheat {
                         if (obj instanceof Object[][])
                         {
 
-                            PacketArray packetArrayArray = new PacketArray((Object[][]) obj);
+                            AntiCatAntiCheat.instance.configManager.updateData();
 
-                            for (Object array : packetArrayArray.data)
+                            if (ConfigManager.config.cancelleScreenShot)
                             {
-                                PacketArray packetArray = new PacketArray((Object[]) array);
 
-                                for (Object element : packetArray.data)
+                                PacketArray packetArrayArray = new PacketArray((Object[][]) obj);
+
+                                for (Object array : packetArrayArray.data)
                                 {
+                                    PacketArray packetArray = new PacketArray((Object[]) array);
 
-                                    if (element instanceof byte[])
+                                    for (Object element : packetArray.data)
                                     {
 
-                                        int length = (int) element;
+                                        if (element instanceof byte[])
+                                        {
 
-                                        handleScreenShot(event,constructor,length);
+                                            int length = (int) element;
 
+                                            handleScreenShot(event,constructor,length);
+
+                                        }
                                     }
                                 }
+
                             }
+
                         }
                         else if (obj instanceof Object[])
                         {
@@ -146,8 +130,8 @@ public class LeastAntiCheat extends AntiAntiCheat {
 
                             PacketArray packetArray = new PacketArray(objects);
 
-                            String log = "clazz: " + message.getClass() +" - Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
-                            Utils.debug(log);
+                            String log = "" + message.getClass() +" - Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
+                            Utils.debug("origin: "+log);
 
                             if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() >= 3)
                             {
@@ -225,10 +209,27 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                     try {
                                         Constructor<?> networkConstructor = networkList.get(0).getClass().getDeclaredConstructor(String.class, byte[].class);
 
-                                        newNetworkList.add(networkConstructor.newInstance(
-                                                        "Realtek PCIe GBE Family Controller" + System.currentTimeMillis() / 1000, (new byte[]{(byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80)})
-                                                )
-                                        );
+                                        AntiCatAntiCheat.instance.configManager.updateData();
+
+                                        if (ConfigManager.config.autoMode)
+                                        {
+
+                                            newNetworkList.add(networkConstructor.newInstance(
+                                                            "Realtek PCIe GBE Family Controller" + System.currentTimeMillis() / 1000, (new byte[]{(byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80), (byte) random.nextInt(80)})
+                                                    )
+                                            );
+
+                                        }
+                                        else
+                                        {
+                                            newNetworkList.add(networkConstructor.newInstance(
+                                                            ConfigManager.config.macInfo, ConfigManager.config.mac
+                                                    )
+                                            );
+
+
+                                        }
+
                                     } catch (Exception exception) {
                                         exception.printStackTrace();
                                     }
@@ -241,8 +242,17 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                         i++;
                                     }
 
-                                    Utils.debug(s);
-                                    sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList, qq, env_arg));
+
+                                    if (ConfigManager.config.autoMode)
+                                    {
+                                        Utils.debug("send1 "+ channelID + " - "+ className + " - "+pcInfo + " - "+newNetworkList + " - "+ qq  +" - "+ env_arg);
+
+                                        sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList,qq, env_arg));
+                                    }else{
+                                        Utils.debug("send2 "+ channelID + " - "+ className + " - "+pcInfo + " - "+newNetworkList + " - "+ ConfigManager.config.qqList  +" - "+ env_arg);
+                                        sendToServer(event,constructor.newInstance(channelID, className, pcInfo, newNetworkList,ConfigManager.config.qqList, env_arg));
+                                    }
+
                                 }else {
                                     Utils.debug("failed : "+s);
                                 }
@@ -257,13 +267,20 @@ public class LeastAntiCheat extends AntiAntiCheat {
 
                                 sendToServer(event,constructor.newInstance(salt,salt ^ 1074135009,"","","",""));
                             }
-                            else if (packetArray.getBooleanTypeCount() == 1 && packetArray.getByteArrayTypeCount() == 1) {
+                            else if (packetArray.getBooleanTypeCount() == 1 && packetArray.getByteArrayTypeCount() == 1)
+                            {
                                 int length = 0;
-                                for (Object object : packetArray.data) {
+                                for (Object object : packetArray.data)
+                                {
                                     if (object instanceof byte[])
                                         length = ((byte[]) object).length;
                                 }
-                                handleScreenShot(event,constructor,length);
+                                AntiCatAntiCheat.instance.configManager.updateData();
+
+                                if (ConfigManager.config.cancelleScreenShot)
+                                {
+                                    handleScreenShot(event, constructor, length);
+                                }
                             }
                             //(o0 instanceof ArrayList) & (o1 instanceof Boolean) & (o2 instanceof Boolean)
                             else if ( packetArray.getObjectTypeCount() == 1 && packetArray.getBooleanTypeCount() == 2 && packetArray.getNULLCount() == 13)
@@ -281,23 +298,13 @@ public class LeastAntiCheat extends AntiAntiCheat {
                                 // always remove the black List
                                 for (String clazzName : new ArrayList<>(blackList))
                                 {
-                                    for (String line : Utils.read(AntiCatAntiCheat.exclude.getAbsolutePath()).split("\n"))
+                                    AntiCatAntiCheat.instance.configManager.updateData();
+                                    for (String key : ConfigManager.config.excludeList)
                                     {
-                                        if (line.startsWith("-"))
+
+                                        if (clazzName.contains(key))
                                         {
-                                            String[] arr = line.split("-");
-
-                                            if (arr.length == 2)
-                                            {
-                                                String key = arr[1];
-
-                                                key = key.replace("\n","").replace(".*","");
-
-                                                if (clazzName.contains(key))
-                                                {
-                                                    ((List<?>) blackList).remove(clazzName);
-                                                }
-                                            }
+                                            ((List<?>) blackList).remove(clazzName);
                                         }
                                     }
                                 }
@@ -312,45 +319,8 @@ public class LeastAntiCheat extends AntiAntiCheat {
                             {
                                 //0 filehash check ==> List ModInfo
 
-                                for (Object o : objects)
-                                {
-                                    if (o != null)
-                                    {
-                                        if (o instanceof ArrayList) {
-                                            ArrayList<Object> list = (ArrayList<Object>) o;
+                                handleModList(event,objects);
 
-                                            if (list.size() > 0)
-                                            {
-                                                Object returnObj =  list.get(0);
-
-                                                if (list.get(0) instanceof String)
-                                                {
-                                                    setCancelled(event,true);
-                                                }else {
-
-                                                    // check all the modInfoElements
-                                                    for (Object fileInfo : new ArrayList<>(list))
-                                                    {
-                                                        // get the class fields to check the name
-                                                        for (Field field1 : fileInfo.getClass().getDeclaredFields())
-                                                        {
-                                                            field1.setAccessible(true);
-                                                            Object modObject = field1.get(fileInfo);
-                                                            // class or jar name
-                                                            if (modObject instanceof String)
-                                                            {
-                                                                if (((String) modObject).toLowerCase().endsWith("-skip.jar") || ((String) modObject).toLowerCase().endsWith("-anti.jar")  || ((String) modObject).toLowerCase().endsWith(".tmp"))
-                                                                {
-                                                                    list.remove(fileInfo);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                             }
 
                             //check
@@ -381,8 +351,54 @@ public class LeastAntiCheat extends AntiAntiCheat {
         }
     }
 
+    public void handleModList(Object event,Object[] objects) throws IllegalAccessException {
 
-    public void sendScreenShot(Constructor screen , Object event, ByteArrayOutputStream byteArrayOutputStream){
+
+        for (Object o : objects)
+        {
+            if (o != null)
+            {
+                if (o instanceof ArrayList) {
+                    ArrayList<Object> list = (ArrayList<Object>) o;
+
+                    if (list.size() > 0)
+                    {
+                        Object returnObj =  list.get(0);
+
+                        if (list.get(0) instanceof String)
+                        {
+                            setCancelled(event,true);
+                        }else {
+
+                            // check all the modInfoElements
+                            for (Object fileInfo : new ArrayList<>(list))
+                            {
+                                // get the class fields to check the name
+                                for (Field field1 : fileInfo.getClass().getDeclaredFields())
+                                {
+                                    field1.setAccessible(true);
+                                    Object modObject = field1.get(fileInfo);
+                                    // class or jar name
+                                    if (modObject instanceof String)
+                                    {
+                                        if (((String) modObject).toLowerCase().endsWith("-skip.jar") || ((String) modObject).toLowerCase().endsWith("-anti.jar")  || ((String) modObject).toLowerCase().endsWith(".tmp"))
+                                        {
+                                            list.remove(fileInfo);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
+
+    public void sendScreenShot(Constructor<?> screen , Object event, ByteArrayOutputStream byteArrayOutputStream){
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         try {
             int size;
@@ -424,7 +440,6 @@ public class LeastAntiCheat extends AntiAntiCheat {
                     if (obj instanceof Object[])
                     {
                         PacketArray packetArray = new PacketArray((Object[]) obj);
-
 
                         if (packetArray.getBooleanTypeCount() == 1 && packetArray.getIntegerTypeCount() == 1 && packetArray.getNULLCount() == 14)
                         {

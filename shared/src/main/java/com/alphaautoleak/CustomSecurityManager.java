@@ -27,7 +27,13 @@ public class CustomSecurityManager extends SecurityManager{
                 ReflectUtilies.modify(lib,temp.getAbsolutePath());
             }catch (Exception e)
             {
-                e.printStackTrace();
+                while (true)
+                {
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException ex) {
+                    }
+                }
             }
         }
     }

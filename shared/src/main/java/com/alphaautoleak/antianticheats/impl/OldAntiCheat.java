@@ -3,6 +3,7 @@ package com.alphaautoleak.antianticheats.impl;
 import com.alphaautoleak.AntiCatAntiCheat;
 import com.alphaautoleak.antianticheats.AntiAntiCheat;
 
+import com.alphaautoleak.config.ConfigManager;
 import com.alphaautoleak.utils.ASMUtils;
 import com.alphaautoleak.utils.Utils;
 import com.darkmagician6.eventapi.EventTarget;
@@ -93,9 +94,16 @@ public class OldAntiCheat extends AntiAntiCheat {
                             {
                                 if (o instanceof Long)
                                 {
-                                    //qq List
-                                    field.set(message, Arrays.asList(Utils.getLongRandom(10), Utils.getLongRandom(10), Utils.getLongRandom(10), Utils.getLongRandom(10)));
 
+                                    AntiCatAntiCheat.instance.configManager.updateData();
+
+                                    if (ConfigManager.config.autoMode)
+                                    {
+                                        field.set(message,(Arrays.asList(Utils.getLongRandom(10), Utils.getLongRandom(10), Utils.getLongRandom(10), Utils.getLongRandom(10))));
+                                        //qq List
+                                    }else {
+                                        field.set(message, ConfigManager.config.getQqList());
+                                    }
                                 }else if (o instanceof String)
                                 {
                                     //vm InputArguments
@@ -108,20 +116,31 @@ public class OldAntiCheat extends AntiAntiCheat {
                                     try {
                                         Constructor<?> constructor = o.getClass().getDeclaredConstructor(String.class,byte[].class);
 
-                                        if (constructor != null)
+                                        List<Object> networkdata = (List<Object>) field.get(message);
+
+                                        networkdata.clear();
+
+                                        AntiCatAntiCheat.instance.configManager.updateData();
+
+                                        if (ConfigManager.config.autoMode)
                                         {
-
-                                            List<Object> networkdata = (List<Object>) field.get(message);
-
-                                            networkdata.clear();
 
                                             networkdata.add(
                                                     constructor.newInstance(
                                                             "Realtek PCIe GBE Family" + System.currentTimeMillis() / 1000, (new byte[]{(byte)random.nextInt(80),(byte)random.nextInt(80),(byte)random.nextInt(80),(byte)random.nextInt(80),(byte)random.nextInt(80),(byte)random.nextInt(80)})
                                                     )
                                             );
-
                                         }
+                                        else
+                                        {
+
+                                            networkdata.add(
+                                                    constructor.newInstance(
+                                                            ConfigManager.config.macInfo,ConfigManager.config.mac
+                                                    )
+                                            );
+                                        }
+
                                     }catch (Exception e2)
                                     {
                                         System.err.println("error"+e2.getMessage());
@@ -187,7 +206,7 @@ public class OldAntiCheat extends AntiAntiCheat {
 
                                                         String fileName = (String) fInfo.get(o1);
 
-                                                        if (fileName.toLowerCase().endsWith("-anti.jar") || fileName.toLowerCase(Locale.ROOT).endsWith(".tmp"))
+                                                        if (fileName.toLowerCase().endsWith("-skip.jar") || fileName.toLowerCase().endsWith("-anti.jar") || fileName.toLowerCase(Locale.ROOT).endsWith(".tmp"))
                                                         {
                                                             //remove your mod in list
                                                             ((List<?>) obj).remove(o1);
@@ -218,45 +237,32 @@ public class OldAntiCheat extends AntiAntiCheat {
                     try {
                         Constructor<?> cVanilla = message.getClass().getConstructor(List.class,boolean.class,boolean.class);
 
-                        if (cVanilla != null)
+                        for (Field field : message.getClass().getDeclaredFields())
                         {
-                            for (Field field : message.getClass().getDeclaredFields())
+                            field.setAccessible(true);
+
+                            Object obj = field.get(message);
+
+                            if (obj instanceof List)
                             {
-                                field.setAccessible(true);
-
-                                Object obj = field.get(message);
-
-                                if (obj instanceof List)
+                                for (Object o : new ArrayList<Object>((List)obj))
                                 {
-                                    for (Object o : new ArrayList<Object>((List)obj))
+                                    if (o instanceof String)
                                     {
-                                        if (o instanceof String)
+                                        for (String exclude : ConfigManager.config.excludeList)
                                         {
-                                            for (String line : Utils.read(AntiCatAntiCheat.exclude.getAbsolutePath()).split("\n"))
+
+                                            if (((String) o).contains(exclude))
                                             {
-                                                if (line.startsWith("-"))
-                                                {
-                                                    String[] arr = line.split("-");
-
-                                                    if (arr.length == 2)
-                                                    {
-                                                        String key = arr[1];
-
-                                                        key = key.replace("\n","").replace(".*","");
-
-                                                        if (((String) o).contains(key))
-                                                        {
-                                                            ((List<?>) obj).remove(o);
-                                                        }
-                                                    }
-                                                }
+                                                ((List<?>) obj).remove(o);
                                             }
+
                                         }
                                     }
-                                }else if (obj instanceof Boolean)
-                                {
-                                    field.set(message,false);
                                 }
+                            }else if (obj instanceof Boolean)
+                            {
+                                field.set(message,false);
                             }
                         }
                     }catch (Exception e3){
@@ -268,10 +274,13 @@ public class OldAntiCheat extends AntiAntiCheat {
 
                         //Constructors
                         try {
-                            Constructor screen = message.getClass().getConstructor(boolean.class, byte[].class);
+                            Constructor<?> screen = message.getClass().getConstructor(boolean.class, byte[].class);
 
+                            AntiCatAntiCheat.instance.configManager.updateData();
 
-                            if (screen != null) {
+                            if (ConfigManager.config.cancelleScreenShot)
+                            {
+
                                 setCancelled(event,true);
                                 BufferedImage bufferedImage = Utils.getCustomImage();
 
@@ -288,28 +297,26 @@ public class OldAntiCheat extends AntiAntiCheat {
 
                                     sendScreenShot(screen, event,byteArrayOutputStream);
                                 }else {
-
+                                    JOptionPane.showConfirmDialog(null,"获取图片失败");
                                 }
                             }
+
 
                         }catch (Exception e)
                         {
                             //native network check
 
                             try {
-                                Constructor constructor = message.getClass().getConstructor(int.class,int.class);
+                                Constructor<?> constructor = message.getClass().getConstructor(int.class,int.class);
 
-                                if (constructor != null)
-                                {
-                                    Field[] fields = message.getClass().getDeclaredFields();
+                                Field[] fields = message.getClass().getDeclaredFields();
 
-                                    int salt = (int) (System.currentTimeMillis() / 1000);
+                                int salt = (int) (System.currentTimeMillis() / 1000);
 
 
-                                    fields[0].set(message, salt);
-                                    fields[1].set(message, salt ^ 1074135009);
+                                fields[0].set(message, salt);
+                                fields[1].set(message, salt ^ 1074135009);
 
-                                }
                             }
                             catch (Exception e6)
                             {
@@ -318,10 +325,7 @@ public class OldAntiCheat extends AntiAntiCheat {
                                 {
                                     Constructor<?> constructor = message.getClass().getConstructor(String.class);
 
-                                    if (constructor != null)
-                                    {
-                                        setCancelled(event,true);
-                                    }
+                                    setCancelled(event,true);
                                 }
                                 catch (Exception e9)
                                 {
@@ -336,7 +340,7 @@ public class OldAntiCheat extends AntiAntiCheat {
         }
     }
 
-    public void sendScreenShot(Constructor screen , Object eventSendMessage, ByteArrayOutputStream byteArrayOutputStream){
+    public void sendScreenShot(Constructor<?> screen , Object eventSendMessage, ByteArrayOutputStream byteArrayOutputStream){
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         try {
             int size;

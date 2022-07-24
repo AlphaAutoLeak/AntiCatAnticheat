@@ -1,9 +1,11 @@
 package com.alphaautoleak.utils;
 
 import com.alphaautoleak.AntiCatAntiCheat;
+import com.alphaautoleak.config.ConfigManager;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -103,14 +105,14 @@ public class Utils {
     public static BufferedImage getCustomImage() {
         try {
             Random random = new Random();
-            File[] files = AntiCatAntiCheat.image.listFiles();
+            File[] files = ConfigManager.image.listFiles();
 
             if (files.length != 0) {
                 File file = files[random.nextInt(files.length)];
 
                 return ImageIO.read(new FileInputStream(file));
             }else{
-                AntiCatAntiCheat.exitServer();
+                JOptionPane.showConfirmDialog(null,"你放点图片可以吗");
             }
         }catch (Exception e)
         {

@@ -3,8 +3,8 @@ rootProject.name = 'acac'
 if (System.getenv()['mcversion'] == "1.12") {
 }else{
 }
+include 'shared'
 include '1.12.2-Forge'
 include '1.7.10-Forge'
 include 'dynamic'
-include 'shared'
 
