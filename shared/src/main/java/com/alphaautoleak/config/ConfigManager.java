@@ -36,10 +36,14 @@ public class ConfigManager
 
             if (!configPath.exists())
             {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+                GsonBuilder gsonBuilder = new GsonBuilder();
+
+                gsonBuilder.excludeFieldsWithoutExposeAnnotation();
+
+                Gson gson = gsonBuilder.setPrettyPrinting().create();
 
                 config.setAutoMode(false);
-
 
                 config.setCancelleScreenShot(false);
 
@@ -118,7 +122,7 @@ public class ConfigManager
             byte[] macList = new byte[6];
             int i = 0;
 
-            for (JsonElement element : jsonObject.get("mac").getAsJsonArray()) {
+            for (JsonElement element : jsonObject.get("macList").getAsJsonArray()) {
                 macList[i] = element.getAsByte();
                 i++;
             }

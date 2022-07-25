@@ -1,5 +1,8 @@
 package com.alphaautoleak.config;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -8,16 +11,38 @@ import java.util.Arrays;
  * @Date: 2022/7/24 20:59
  */
 public class Config {
-
+    @Expose
+    @SerializedName(value = "autoMode")
     public boolean autoMode;
+
+    @Expose
+    @SerializedName(value = "qqList")
     public ArrayList<Long> qqList;
+
+    @Expose
+    @SerializedName(value = "excludeList")
     public ArrayList<String> excludeList;
+
+    @Expose
+    @SerializedName(value = "cancelleScreenShot")
     public boolean cancelleScreenShot;
 
+    @Expose
+    @SerializedName(value = "enableCustomScreenShotText")
     public boolean enableCustomScreenShotText;
+
+    @Expose
+    @SerializedName(value = "screenShotText")
     public String screenShotText;
+
+    @Expose
+    @SerializedName(value = "macInfo")
     public String macInfo;
+
+    @Expose
+    @SerializedName(value = "macList")
     public byte[] mac; //size 6
+
     public Config() {
 
     }
