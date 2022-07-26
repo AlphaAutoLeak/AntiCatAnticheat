@@ -6,7 +6,6 @@ import com.alphaautoleak.antianticheats.AntiAntiCheat;
 import com.alphaautoleak.config.ConfigManager;
 import com.alphaautoleak.utils.ASMUtils;
 import com.alphaautoleak.utils.Utils;
-import com.darkmagician6.eventapi.EventTarget;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,7 +22,7 @@ import java.util.zip.GZIPOutputStream;
  * @Author: SnowFlake
  * @Date: 2022/7/8 20:34
  */
-public class OldAntiCheat extends AntiAntiCheat {
+public class LowVersionAnti extends AntiAntiCheat {
     public Random random = new Random();
 
     @Override

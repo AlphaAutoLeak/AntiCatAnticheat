@@ -27,7 +27,7 @@ import java.util.zip.GZIPOutputStream;
  * @Author: SnowFlake
  * @Date: 2022/7/8 20:43
  */
-public class LeastAntiCheat extends AntiAntiCheat {
+public class MidVersionAnti extends AntiAntiCheat {
     private Random random = new Random();
 
 

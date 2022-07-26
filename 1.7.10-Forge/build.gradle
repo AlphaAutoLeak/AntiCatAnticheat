@@ -5,19 +5,20 @@ buildscript {
         jcenter()
         maven {
             url = "https://files.minecraftforge.net/maven"
-//            url = "http://lss233.littleservice.cn/repositories/minecraft"
         }
     }
 
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.2"
     }
 }
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'java'
 apply plugin: 'forge'
 
 group = "anticatcheat"
-version = "1.7.10-skip"
+version = "1.7.10"
 archivesBaseName = "!!AntiCatCheat"
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -30,10 +31,16 @@ minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
 }
+shadowJar {
+    exclude 'net/**'
+    exclude '*.*'
 
+    dependencies {
+        include(project(':shared'))
+    }
+}
 dependencies {
     implementation project(':shared')
-//    implementation group: 'javassist', name: 'javassist', version: '3.12.1.GA'
 }
 
 processResources {
@@ -50,6 +57,7 @@ processResources {
     }
 
 }
+
 
 
 configurations {

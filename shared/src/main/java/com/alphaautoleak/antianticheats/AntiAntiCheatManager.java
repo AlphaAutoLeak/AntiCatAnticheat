@@ -1,8 +1,8 @@
 package com.alphaautoleak.antianticheats;
 
 import com.alphaautoleak.AntiCatAntiCheat;
-import com.alphaautoleak.antianticheats.impl.LeastAntiCheat;
-import com.alphaautoleak.antianticheats.impl.OldAntiCheat;
+import com.alphaautoleak.antianticheats.impl.MidVersionAnti;
+import com.alphaautoleak.antianticheats.impl.LowVersionAnti;
 
 import java.util.ArrayList;
 
@@ -17,9 +17,9 @@ public class AntiAntiCheatManager {
     public AntiAntiCheatManager()
     {
         if (AntiCatAntiCheat.oldVersion){
-            add(new OldAntiCheat());
+            add(new LowVersionAnti());
         }
-        add(new LeastAntiCheat());
+        add(new MidVersionAnti());
     }
 
 
