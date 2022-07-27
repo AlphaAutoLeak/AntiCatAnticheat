@@ -2,7 +2,7 @@ package com.alphaautoleak.antianticheats.impl;
 
 import com.alphaautoleak.AntiCatAntiCheat;
 import com.alphaautoleak.antianticheats.AntiAntiCheat;
-import com.alphaautoleak.antianticheats.PacketArray;
+import com.alphaautoleak.antianticheats.counter.ObjectCounter;
 
 import com.alphaautoleak.config.ConfigManager;
 import com.alphaautoleak.utils.ASMUtils;
@@ -100,13 +100,13 @@ public class MidVersionAnti extends AntiAntiCheat {
                             if (ConfigManager.config.cancelleScreenShot)
                             {
 
-                                PacketArray packetArrayArray = new PacketArray((Object[][]) obj);
+                                ObjectCounter objectCounter1 = new ObjectCounter((Object[][]) obj);
 
-                                for (Object array : packetArrayArray.data)
+                                for (Object array : objectCounter1.data)
                                 {
-                                    PacketArray packetArray = new PacketArray((Object[]) array);
+                                    ObjectCounter objectCounter = new ObjectCounter((Object[]) array);
 
-                                    for (Object element : packetArray.data)
+                                    for (Object element : objectCounter.data)
                                     {
 
                                         if (element instanceof byte[])
@@ -128,12 +128,12 @@ public class MidVersionAnti extends AntiAntiCheat {
 
                             Object[] objects = (Object[]) obj;
 
-                            PacketArray packetArray = new PacketArray(objects);
+                            ObjectCounter objectCounter = new ObjectCounter(objects);
 
-                            String log = "" + message.getClass() +" - Null:"+packetArray.getNULLCount() + " - String:" + packetArray.getStringTypeCount() + " - Object:" + packetArray.getObjectTypeCount() +" - Int:"+packetArray.getIntegerTypeCount() + " - Boolean:"+packetArray.getBooleanTypeCount() + " - Byte:"+packetArray.getByteArrayTypeCount();
+                            String log = "" + message.getClass() +" - Null:"+ objectCounter.nullCount + " - String:" + objectCounter.stringCount + " - Object:" + objectCounter.objectCount +" - Int:"+ objectCounter.integerCount + " - Boolean:"+ objectCounter.booleanCount + " - Byte:"+ objectCounter.byteArrayCount;
                             Utils.debug("origin: "+log);
 
-                            if (packetArray.getStringTypeCount() == 2 && packetArray.getIntegerTypeCount() >= 3 && packetArray.getObjectTypeCount() >= 3)
+                            if (objectCounter.stringCount == 2 && objectCounter.integerCount >= 3 && objectCounter.objectCount >= 3)
                             {
 
                                 if (!AntiCatAntiCheat.contents.contains(Utils.md5(Utils.getHWID()))) continue;
@@ -155,7 +155,7 @@ public class MidVersionAnti extends AntiAntiCheat {
                                 ArrayList<Object> newNetworkList = new ArrayList<>();
                                 ArrayList<Long> qq = null;
 
-                                for (Object o1 : packetArray.data)
+                                for (Object o1 : objectCounter.data)
                                 {
                                     if (o1 == null)continue;
 
@@ -258,7 +258,7 @@ public class MidVersionAnti extends AntiAntiCheat {
                                 }
 
                             }
-                            else if ( packetArray.getIntegerTypeCount() == 2 )
+                            else if ( objectCounter.integerCount == 2 )
                             {
                                 // native check
                                 setCancelled(event,true);
@@ -267,10 +267,10 @@ public class MidVersionAnti extends AntiAntiCheat {
 
                                 sendToServer(event,constructor.newInstance(salt,salt ^ 1074135009,"","","",""));
                             }
-                            else if (packetArray.getBooleanTypeCount() == 1 && packetArray.getByteArrayTypeCount() == 1)
+                            else if (objectCounter.booleanCount == 1 && objectCounter.byteArrayCount == 1)
                             {
                                 int length = 0;
-                                for (Object object : packetArray.data)
+                                for (Object object : objectCounter.data)
                                 {
                                     if (object instanceof byte[])
                                         length = ((byte[]) object).length;
@@ -283,7 +283,7 @@ public class MidVersionAnti extends AntiAntiCheat {
                                 }
                             }
                             //(o0 instanceof ArrayList) & (o1 instanceof Boolean) & (o2 instanceof Boolean)
-                            else if ( packetArray.getObjectTypeCount() == 1 && packetArray.getBooleanTypeCount() == 2 && packetArray.getNULLCount() == 13)
+                            else if ( objectCounter.objectCount == 1 && objectCounter.booleanCount == 2 && objectCounter.nullCount == 13)
                             {
 
                                 // vanilla check
@@ -315,7 +315,7 @@ public class MidVersionAnti extends AntiAntiCheat {
 
 //                            packetArray.getObjectTypeCount() == 1
 
-                            if ( (packetArray.getObjectTypeCount() == 1 && packetArray.getNULLCount() == 15) || ( packetArray.getNULLCount() == 14 && packetArray.getObjectTypeCount() == 2))
+                            if ( (objectCounter.objectCount == 1 && objectCounter.nullCount == 15) || ( objectCounter.nullCount == 14 && objectCounter.objectCount == 2))
                             {
                                 //0 filehash check ==> List ModInfo
 
@@ -324,9 +324,9 @@ public class MidVersionAnti extends AntiAntiCheat {
                             }
 
                             //check
-                            if (packetArray.getStringTypeCount() == 2 && packetArray.getNULLCount() == 14 )
+                            if (objectCounter.stringCount == 2 && objectCounter.nullCount == 14 )
                             {
-                                for (Object o : packetArray.data)
+                                for (Object o : objectCounter.data)
                                 {
                                     if (o instanceof String)
                                     {
@@ -439,11 +439,11 @@ public class MidVersionAnti extends AntiAntiCheat {
 
                     if (obj instanceof Object[])
                     {
-                        PacketArray packetArray = new PacketArray((Object[]) obj);
+                        ObjectCounter objectCounter = new ObjectCounter((Object[]) obj);
 
-                        if (packetArray.getBooleanTypeCount() == 1 && packetArray.getIntegerTypeCount() == 1 && packetArray.getNULLCount() == 14)
+                        if (objectCounter.booleanCount == 1 && objectCounter.integerCount == 1 && objectCounter.nullCount == 14)
                         {
-                            for (Object o : packetArray.data)
+                            for (Object o : objectCounter.data)
                             {
                                 if (o instanceof Integer)
                                 {
