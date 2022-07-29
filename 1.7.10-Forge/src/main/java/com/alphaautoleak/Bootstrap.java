@@ -42,7 +42,7 @@ public class Bootstrap {
 
         for (AntiAntiCheat antiAntiCheat : antiCatAntiCheat.antiAntiCheatManager.antiAntiCheats)
         {
-            antiAntiCheat.onReceive(eventReceiveMessage.message,eventReceiveMessage);
+            antiAntiCheat.onReceive(eventReceiveMessage.message,eventReceiveMessage.messageHandler,eventReceiveMessage);
         }
     }
 

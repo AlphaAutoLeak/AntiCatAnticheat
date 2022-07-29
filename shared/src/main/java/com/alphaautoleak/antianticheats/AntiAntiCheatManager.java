@@ -1,6 +1,7 @@
 package com.alphaautoleak.antianticheats;
 
 import com.alphaautoleak.AntiCatAntiCheat;
+import com.alphaautoleak.antianticheats.impl.HighVersionAnti;
 import com.alphaautoleak.antianticheats.impl.MidVersionAnti;
 import com.alphaautoleak.antianticheats.impl.LowVersionAnti;
 
@@ -16,9 +17,8 @@ public class AntiAntiCheatManager {
 
     public AntiAntiCheatManager()
     {
-        if (AntiCatAntiCheat.oldVersion){
-            add(new LowVersionAnti());
-        }
+        add(new LowVersionAnti());
+        add(new HighVersionAnti());
         add(new MidVersionAnti());
     }
 

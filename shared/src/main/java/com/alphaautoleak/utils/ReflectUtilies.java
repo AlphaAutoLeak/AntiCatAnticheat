@@ -105,6 +105,19 @@ public class ReflectUtilies {
         unsafe.putObject(unsafe.staticFieldBase(field), unsafe.staticFieldOffset(field), value);
     }
 
+    public static StackTraceElement getStackTraceElement(int level){
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        level+=2;
+        if (level>=stackTraceElements.length)
+        {
+            level = stackTraceElements.length - 1;
+        }
+
+        return stackTraceElements[level];
+    }
+
+
+
     public static void removeFinal(Field field, Object newValue)  {
         try {
 

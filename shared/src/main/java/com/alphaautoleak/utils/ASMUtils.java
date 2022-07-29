@@ -1,10 +1,12 @@
 package com.alphaautoleak.utils;
 
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.*;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author: SnowFlake
@@ -12,6 +14,36 @@ import java.lang.reflect.Method;
  */
 public class ASMUtils {
 
+
+    public static void updateInstructions(MethodNode m, Map<LabelNode, LabelNode> labels, InsnList rewrittenCode) {
+        m.instructions.clear();
+        m.instructions = rewrittenCode;
+        if (m.tryCatchBlocks != null) {
+            m.tryCatchBlocks.forEach(tcb -> {
+                tcb.start = labels.get(tcb.start);
+                tcb.end = labels.get(tcb.end);
+                tcb.handler = labels.get(tcb.handler);
+            });
+        }
+        if (m.localVariables != null) {
+            m.localVariables.forEach(lv -> {
+                lv.start = labels.get(lv.start);
+                lv.end = labels.get(lv.end);
+            });
+        }
+        m.visibleLocalVariableAnnotations = null;
+        m.invisibleLocalVariableAnnotations = null;
+    }
+
+    public static Map<LabelNode, LabelNode> cloneLabels(InsnList insns) {
+        HashMap<LabelNode, LabelNode> labelMap = new HashMap<>();
+        for (AbstractInsnNode insn = insns.getFirst(); insn != null; insn = insn.getNext()) {
+            if (insn.getType() == AbstractInsnNode.LABEL) {
+                labelMap.put((LabelNode) insn, new LabelNode());
+            }
+        }
+        return labelMap;
+    }
     public static ClassNode readClass(Class<?> clazz){
         try {
             ClassNode classNode = new ClassNode();

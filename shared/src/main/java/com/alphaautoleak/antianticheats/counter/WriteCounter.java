@@ -70,5 +70,19 @@ public class WriteCounter
         }
     }
 
+    @Override
+    public String toString() {
+        return "WriteCounter{" +
+                "methodNode=" + methodNode +
+                ", shortCount=" + shortCount +
+                ", stringCount=" + stringCount +
+                ", booleanCount=" + booleanCount +
+                ", integerCount=" + integerCount +
+                ", objectCount=" + objectCount +
+                ", byteCount=" + byteCount +
+                ", byteArrayCount=" + byteArrayCount +
+                ", longCount=" + longCount +
+                '}';
+    }
 
 }

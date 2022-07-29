@@ -41,22 +41,35 @@ public class ClassTransformer implements IClassTransformer, Opcodes
     public void transformSimpleChannelHandlerWrapper1_7_10(ClassNode classNode, MethodNode methodNode) {
         if (methodNode.name.equalsIgnoreCase("channelRead0")) {
 
-            InsnList insnList = new InsnList();
-            insnList.add(new VarInsnNode(ALOAD,2));
+            for (FieldNode fieldNode : classNode.fields)
+            {
+                if (fieldNode.desc.contains("IMessageHandler"))
+                {
 
-            insnList.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(ClassTransformer.class), "simpleChannelHandlerWrapper", "(Ljava/lang/Object;)Z", false));
-            LabelNode labelNode = new LabelNode();
-            insnList.add(new JumpInsnNode(IFEQ,labelNode));
-            insnList.add(new InsnNode(RETURN));
-            insnList.add(labelNode);
-            insnList.add(new FrameNode(F_SAME, 0, null, 0, null));
-            methodNode.instructions.insert(insnList);
+                    InsnList insnList = new InsnList();
+
+                    insnList.add(new VarInsnNode(ALOAD,2));
+
+                    insnList.add(new VarInsnNode(ALOAD,0));
+                    insnList.add(new FieldInsnNode(GETFIELD, classNode.name, fieldNode.name, fieldNode.desc));
+
+                    insnList.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(ClassTransformer.class), "simpleChannelHandlerWrapper", "(Ljava/lang/Object;Ljava/lang/Object;)Z", false));
+                    LabelNode labelNode = new LabelNode();
+                    insnList.add(new JumpInsnNode(IFEQ,labelNode));
+                    insnList.add(new InsnNode(RETURN));
+                    insnList.add(labelNode);
+                    insnList.add(new FrameNode(F_SAME, 0, null, 0, null));
+                    methodNode.instructions.insert(insnList);
+
+                }
+            }
+
         }
     }
 
 
-    public static boolean simpleChannelHandlerWrapper(Object object){
-        EventReceiveMessage eventReceiveMessage = new EventReceiveMessage(object);
+    public static boolean simpleChannelHandlerWrapper(Object packet , Object messageHandler){
+        EventReceiveMessage eventReceiveMessage = new EventReceiveMessage(packet,messageHandler);
         EventManager.call(eventReceiveMessage);
         return eventReceiveMessage.isCancelled();
     }
@@ -68,7 +81,7 @@ public class ClassTransformer implements IClassTransformer, Opcodes
             insnList.add(new VarInsnNode(ALOAD,1));
 
             insnList.add(new VarInsnNode(ALOAD,0));
-            insnList.add(new FieldInsnNode(GETFIELD, "cpw/mods/fml/common/network/simpleimpl/SimpleNetworkWrapper", "channels", "Ljava/util/EnumMap;"));
+            insnList.add(new FieldInsnNode(GETFIELD, classNode.name, "channels", "Ljava/util/EnumMap;"));
 
             insnList.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(ClassTransformer.class), "simpleNetworkWrapperHook", "(Ljava/lang/Object;Ljava/util/EnumMap;)Z", false));
             LabelNode labelNode = new LabelNode();

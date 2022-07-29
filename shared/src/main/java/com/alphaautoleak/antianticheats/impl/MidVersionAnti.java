@@ -75,7 +75,6 @@ public class MidVersionAnti extends AntiAntiCheat {
 
     @Override
     public void onSend(Object message ,Object event){
-
         try
         {
             if (message.getClass().getCanonicalName().contains("165824") ||
@@ -419,7 +418,7 @@ public class MidVersionAnti extends AntiAntiCheat {
     public static int serverTime = 0;
 
     @Override
-    public void onReceive(Object message,Object event)
+    public void onReceive(Object message ,Object messageHandler ,Object event)
     {
 
         try

@@ -26,7 +26,7 @@ public class LowVersionAnti extends AntiAntiCheat {
     public Random random = new Random();
 
     @Override
-    public void onReceive(Object message ,Object event){
+    public void onReceive(Object message ,Object messageHandler,Object event){
 
         try {
             if (message.getClass().getCanonicalName().contains("165824") ||

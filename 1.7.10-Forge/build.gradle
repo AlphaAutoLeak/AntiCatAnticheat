@@ -33,7 +33,10 @@ minecraft {
 }
 shadowJar {
     exclude 'net/**'
-    exclude '*.*'
+    exclude 'GradleStart$AssetIndex$AssetEntry.class'
+    exclude 'GradleStart$AssetIndex.class'
+    exclude 'GradleStart.class'
+    exclude 'GradleStartServer.class'
 
     dependencies {
         include(project(':shared'))

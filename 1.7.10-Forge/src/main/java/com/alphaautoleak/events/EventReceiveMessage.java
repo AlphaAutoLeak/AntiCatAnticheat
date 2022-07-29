@@ -11,9 +11,11 @@ public class EventReceiveMessage implements Event {
     private boolean cancelled;
     public Object message;
 
+    public Object messageHandler;
 
-    public EventReceiveMessage(Object packet){
+    public EventReceiveMessage(Object packet,Object messagehandler){
         this.message = packet;
+        this.messageHandler = messagehandler;
     }
 
     public boolean isCancelled() {

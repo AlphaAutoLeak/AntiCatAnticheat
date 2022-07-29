@@ -21,7 +21,10 @@ public class AntiAntiCheat {
 
     }
 
-    public void onReceive(Object message ,Object event){
+    public void onReceive(Object message ,Object messageHandler,Object event){
+
+
+
 
     }
 

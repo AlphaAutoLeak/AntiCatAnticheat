@@ -53,12 +53,6 @@ public class Utils {
     }
 
 
-    public static void log(String text){
-        Logger logger = Logger.getLogger("AntiCatAntiCheat");
-
-        logger.log(Level.SEVERE,text);
-    }
-
     public static String getHWID() {
         StringBuilder sb = new StringBuilder();
         String main = System.getenv("COMPUTERNAME") +
