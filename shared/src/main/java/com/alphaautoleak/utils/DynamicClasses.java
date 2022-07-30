@@ -28,14 +28,14 @@ public class DynamicClasses implements Opcodes {
         {
             clone.superName = "java/lang/Object";
         }
-        cn.fields.forEach(f -> clone.fields.add(new FieldNode(f.access, f.name, f.desc, null, f.value)));
+        cn.fields.forEach(f -> clone.fields.add(new FieldNode(f.access, f.name, f.desc, f.signature, f.value)));
         cn.methods.forEach(m -> clone.methods.add(copyMethod(m)));
         return clone;
     }
 
 
     public static MethodNode copyMethod(MethodNode original) {
-        MethodNode mn = new MethodNode(original.access, original.name, original.desc, null, original.exceptions.toArray(new String[0]));
+        MethodNode mn = new MethodNode(original.access, original.name, original.desc, original.signature, original.exceptions.toArray(new String[0]));
         InsnList copy = new InsnList();
         Map<LabelNode, LabelNode> labels = ASMUtils.cloneLabels(original.instructions);
         for (AbstractInsnNode ain : original.instructions.toArray()) {

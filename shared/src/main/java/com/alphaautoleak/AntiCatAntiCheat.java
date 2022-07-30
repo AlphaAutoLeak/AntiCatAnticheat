@@ -5,6 +5,7 @@ import com.alphaautoleak.config.ConfigManager;
 import com.alphaautoleak.thread.AntiDebugThread;
 import com.alphaautoleak.utils.ReflectUtilies;
 import com.alphaautoleak.utils.Utils;
+import com.alphaautoleak.utils.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class AntiCatAntiCheat {
     public ConfigManager configManager;
     public static String contents = null;
 
-    public AntiCatAntiCheat()
+    public AntiCatAntiCheat(Version version)
     {
         instance = this;
         new AntiDebugThread().start();

@@ -4,6 +4,7 @@ import com.alphaautoleak.antianticheats.AntiAntiCheat;
 import com.alphaautoleak.events.EventReceiveMessage;
 import com.alphaautoleak.events.EventSendMessage;
 import com.alphaautoleak.utils.ReflectUtilies;
+import com.alphaautoleak.utils.Version;
 import com.darkmagician6.eventapi.EventManager;
 import com.darkmagician6.eventapi.EventTarget;
 import cpw.mods.fml.common.Mod;
@@ -19,7 +20,7 @@ public class Bootstrap {
     public AntiCatAntiCheat antiCatAntiCheat;
 
     public Bootstrap()  {
-        antiCatAntiCheat = new AntiCatAntiCheat();
+        antiCatAntiCheat = new AntiCatAntiCheat(Version.VERSION_1_7_10);
         EventManager.register(this);
     }
 

@@ -21,7 +21,6 @@ public class HighVersionAnti extends AntiAntiCheat {
     public static boolean initation;
     public static Class<?> messageHandlerClazz;
 
-
     @Override
     public void onReceive(Object message, Object messageHandler,Object event) {
         try
