@@ -1,17 +1,17 @@
 # AntiCatAnticheat
-- [演示视频](https://b23.tv/ltnquRW)
-这是反`定制猫反`的软件源代码,支持2.7.5版本以下。
+- 这是调试`定制猫反`的软件源代码,支持2.7.5版本以下。
 - 不支持更新最新版本
 - 最新版本已和谐此方法
-## How to work (`如何工作`)
-- 通过安全管理器替换dll路径
-- Hook发包方法,进行数据修改
+
+## 声明
+1. 本项目使用 `MIT License`,允许您进行任意修改/混淆/发布/传播，且你不需要保留项目名字以及作者名称并允许商用，且造成后果与本项目无关。
+2. 特别感谢<a href="https://www.jetbrains.com"> JetBrains </a>  与 <a href="https://github.com/llbit/ow2-asm"> ASM </a>对这个项目的支持。
+
+## How to work
+通过[ClassTransformer](https://github.com/AlphaAutoLeak/AntiCatAnticheat/blob/master/1.12.2-Forge/src/main/java/com/alphaautoleak/asm/ClassTransformer.java)对`SimpleNetworkWrapper`类中的`sendToServer`方法进行插桩，并通过`设置Event事件`达到对`Imessage`数据包中的数据，进行监控等一系列操作。
 
 # 配置文件使用说明
 `配置文件(动态配置文件夹里,每个用户名字都不同)`
-只在反猫反以下版本出现
-* (1.12.2 高于0.5版本)
-* (1.7.10 高于0.8版本)
 
 ----
 
@@ -63,14 +63,14 @@
 - 参数的解释
 
 |            参数             |   可填入类型   |        含义        |    默认值    |
-| :------------------------: | :-----------: | :----------------: | ------------ |
-|          automode          | false 与 true | false(否) true(是) | false(否)    |
-|           qqList           |    数字类型    |      伪造的QQ       | 随机10位数字 |
+| :------------------------: | :-----------: | :----------------: | ----------- |
+|          automode          | false 与 true | false(否) true(是) | false       |
+|           qqList           |    数字类型    |         QQ         | 随机10位数字 |
 |        excludeList         |    字符类型    |    排除禁止的mod    | 如上所示     |
-|     cancelleScreenShot     | false 与 true | false(否) true(是) | false(否)    |
-| enableCustomScreenShotText | false 与 true | false(否) true(是) | false(否)    |
-|       screenShotText       |    字符类型    |  自定义假截图的水印  | 宣传qq群     |
-|          macInfo           | 数字与字符类型  |     假网卡信息      | 如上所示     |
+|     cancelleScreenShot     | false 与 true | false(否) true(是) | false       |
+| enableCustomScreenShotText | false 与 true | false(否) true(是) | false       |
+|       screenShotText       |    字符类型    |  自定义假截图的水印  | NULL        |
+|          macInfo           | 数字与字符类型  |      网卡信息       | 如上所示     |
 |            mac             |    数字类型    |   数字类型网卡地址   | 如上所示     |
 
 ----
@@ -94,7 +94,7 @@
 ----
 
 ## QQList
-- 腐竹无法获取你的完整qq号，但可以从加密后字符来判断
+> 后台无法获取你的完整qq号，但可以从加密后字符来判断
 
 以下为后台数据
 ![image](https://github.com/AlphaAutoLeak/AntiCatAnticheat/blob/master/img/364182202245189.png)
